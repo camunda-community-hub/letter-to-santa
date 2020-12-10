@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React from 'react';
 import TopBar from "./TopBar";
 import Content from "./Content"
 import FooterMenu from "./FooterMenu";
@@ -11,20 +11,22 @@ function App() {
   const styles = {
     white: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     black: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    red: (opacity = 1) => `#c03636`,
+    red: (opacity = 0) => `#CC1800`,
     topBarHeight: 40,
     footerMenuHeight: 50
   };
 
   return (
+
     <div className="wrapper">
-      <div>
+
         <TopBar styles={styles} />
 
         {/* <FooterMenu menuItems={menuItems} styles={styles} /> */}
         <Content styles={styles} />
         <FooterMenu styles={styles} />
-      </div>
+
+
 
 
       <div class="ball-bkg">
@@ -65,7 +67,6 @@ function App() {
 
       </div>
     </div>
-
 
 
   )

@@ -6,18 +6,12 @@ const Form = ({ styles }) => {
   const formReducer = (state, event) => {
     return {
       ...state,
-    //   [event.target.name]: event.target.value
       [event.name]: event.value
     }
   }
-  //var submitted = false;
   const baseStyle = {  }
-  const formStyle = {
-    width: document.body.width - 50,
-    height: document.body.height - 50
-  }
+
   const [formData, setFormData] = useReducer(formReducer, {});
-  //const[showMe, setShowMe] = useState(true);
   const [submitted, setSubmitting] = useState(false);
 
   const handleSubmit = event => {
@@ -36,16 +30,10 @@ const Form = ({ styles }) => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
       body: JSON.stringify(formData)
     };
-    fetch('http://localhost:9090/santa', requestOptions)
-      .then(response => response.json())
-      .then(data => this.setState({ postId: data.id }));
+    fetch('https://write-a-letter-to-santa.org:9091/santa', requestOptions);
 
-alert('Santa has been notified!');
-    //setShowMe(false);
+alert('Santa has been notified! You can reload the page to send another letter.');
 
-    // setTimeout(() => {
-    //   setSubmitting(false);
-    // }, 3000)
   }
   const handleChange = event => {
     setFormData({
@@ -53,11 +41,7 @@ alert('Santa has been notified!');
       value:  event.target.value,
     });
   }
-  const thanksStyle = {
-    fontSize: 96,
-    textAlign: "center",
-    color: "white"
-  }
+
   return (
     <div style={baseStyle}>
       <div style={{ display: !submitted ? "none" : "thanksStyle" }}>Thank you! Santa has been notified!</div>

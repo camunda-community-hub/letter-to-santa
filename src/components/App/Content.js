@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React from 'react';
 import Form from "./Form"
 
 const Content = ({ styles }) => {
@@ -10,7 +10,8 @@ const Content = ({ styles }) => {
     marginTop: styles.topBarHeight + 10,
     width: document.body.width,
     height: document.body.height - (styles.topBarHeight + 10) - 20,
-    color: "white"
+    color: "white",
+    zIndex: 1
   }
   const contentStyle = {
     // paddingTop: styles.topBarHeight + 10,
@@ -22,7 +23,7 @@ const Content = ({ styles }) => {
     width: document.body.width - 20,
     height: document.body.height - 20
   };
-  
+
   //const [submitting, setSubmitting] = useState(false);
   return (
 

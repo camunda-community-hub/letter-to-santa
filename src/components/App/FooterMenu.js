@@ -1,5 +1,5 @@
 import React from "react";
-
+import logo from "../../imgs/Logo_White.png"
 const FooterMenu = ({ menuItems, styles }) => {
   return (
     <div
@@ -14,7 +14,7 @@ const FooterMenu = ({ menuItems, styles }) => {
         bottom: 0
       }}
     >
-    <h3>Powered by Camunda</h3>
+      <span class="powered">Powered by <a href="https://camunda.com" target="_new"><img class="photo" alt="camunda logo" src={logo}></img></a></span>
 
     </div>
   );
