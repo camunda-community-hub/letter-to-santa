@@ -14,7 +14,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "PORT=9090 react-scripts start",
+    "start": "PORT=9090 HTTPS=true SSL_CRT_FILE=/home/santa/ssl/certs/write_a_letter_to_santa_org_c1658_d7935_1639094399_401612a37d185ba05e8f3444da857270.crt SSL_KEY_FILE=/home/santa/ssl/keys/c1658_d7935_22cc5119c03ebb38ab5995713e2e2d21.key react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

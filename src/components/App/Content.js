@@ -41,6 +41,8 @@ const Content = ({ styles }) => {
           </div>
         }
         <Form />
+        <h2>For entertainment purposes only</h2>
+        <h2><strong>Note:</strong> No email addresses or names are retained or stored anywhere on this server. Ever.</h2>
       </div>
     </div>
   );
