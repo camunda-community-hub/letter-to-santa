@@ -9,7 +9,7 @@ const Form = ({ styles }) => {
       [event.name]: event.value
     }
   }
-  const baseStyle = {  }
+  const baseStyle = {}
 
   const [formData, setFormData] = useReducer(formReducer, {});
   const [submitted, setSubmitting] = useState(false);
@@ -32,37 +32,37 @@ const Form = ({ styles }) => {
     };
     fetch('https://write-a-letter-to-santa.org:9091/santa', requestOptions);
 
-alert('Santa has been notified! You can reload the page to send another letter.');
+    alert('Santa has been notified! You can reload the page to send another letter.');
 
   }
   const handleChange = event => {
     setFormData({
-      name:  event.target.name ,
-      value:  event.target.value,
+      name: event.target.name,
+      value: event.target.value,
     });
   }
 
   return (
     <div style={baseStyle}>
       <div style={{ display: !submitted ? "none" : "thanksStyle" }}>Thank you! Santa has been notified!</div>
-    <form style={{ display: submitted ? "none" : "formStyle" }} onSubmit={handleSubmit}>
-      <fieldset >
-        <label>
-          <p>Name</p>
-          <input name="name" onChange={handleChange} required/>
-        </label>
-        <label>
-          <p>Parent's Email Address</p>
-          <input type="email" name="ParentEmailAddress" onChange={handleChange} required/>
-        </label>
-        <p></p>
-        <label for="SantaLetter" >Your Letter to Santa:</label>
-          <TextareaAutosize name="letter" minRows={10} required onChange={handleChange}/>
-      </fieldset>
-      <div class="button-center">
-        <button class="button" type="submit">Send Letter</button>
-      </div>
-    </form>
+      <form style={{ display: submitted ? "none" : "formStyle" }} onSubmit={handleSubmit}>
+        <fieldset >
+          <label>
+            <p>Name</p>
+            <input name="name" onChange={handleChange} required />
+          </label>
+          <label>
+            <p>Parent's Email Address</p>
+            <input type="email" name="ParentEmailAddress" onChange={handleChange} required />
+          </label>
+          <p></p>
+          <label for="SantaLetter" >Your Letter to Santa:</label>
+          <TextareaAutosize name="letter" minRows={10} required onChange={handleChange} />
+        </fieldset>
+        <div class="button-center">
+          <button class="button" type="submit">Send Letter</button>
+        </div>
+      </form>
     </div>
   );
 };
