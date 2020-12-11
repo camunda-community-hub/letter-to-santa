@@ -359,4 +359,4 @@ Of course the NLP part could be improved substantially. Santa simply used the fr
 
 Further, the Amazon search portion could be _much_ better with an actual Amazon Reseller account. Maybe next year.
 
-If you can think of other areas for improvement -- and there must be a lot! -- please feel free to reach out to [David G. Simmons](mailto:david.simmons@camunda.com), Principle Developer Advocate at Camunda who was responsible for helping Santa get this entire process set up.
+If you can think of other areas for improvement -- and there must be a lot! -- please feel free to reach out to [David G. Simmons](mailto:david.simmons@camunda.com), Principal Developer Advocate at Camunda who was responsible for helping Santa get this entire process set up.
