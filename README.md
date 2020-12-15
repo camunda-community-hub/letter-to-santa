@@ -4,15 +4,11 @@ It’s that time of year again. The time when the world’s largest order fulfil
 
 This year is different, however. Earlier this year, Saint Nick clicked on an ad on his Facebook feed, one promising a digital nomad lifestyle through automating his business. Sick of the Arctic weather and the stress of traveling, the thought of sitting on a beach in Thailand - while still bringing joy to children around the world - was enticing.
 
-Santa paid for the course, and applied the principles of process automation, task decomposition and distribution, and integration with third-party services to his business.
+Santa paid for the course and applied the principles of process automation, task decomposition and distribution, and integration with third-party services to his business.
 
-Now, children’s letters to Santa are routed to independent associates (their parents), who fulfill the orders using Amazon. Santa’s successful business transformation became a case study, which we’re going to share with you here.
+Now he's kicking back on a beach on Koh Samui, while the automation brings joy to the world - at scale.
 
-Before we get into that, let’s answer the obvious first question: what happened to the elves and the reindeer?
-
-Obviously, they were concerned about their future. I mean, their entire industry just got innovated out of existence overnight. Union officials met with Santa, and after an undisclosed settlement, the elves launched a new start-up: Elvenware, working on a suite of productivity tools; and the reindeer are doing a celebrity tour, with a show being developed for a Vegas residency.
-
-Now, Saint Nick is kicking back on a beach on Koh Samui, while the automation brings joy to the world - at scale.
+So this Christmas, children’s letters to Santa are routed to independent associates (their parents), who fulfill the orders using Amazon. Santa’s successful business transformation became a case study, which we’re going to share with you here.
 
 Here’s how it’s done.
 
@@ -22,7 +18,7 @@ Given that Santa's a modern guy, and in case he needed to supplement his retirem
 
 While it was harder than he thought, thanks to a lot of hard-core googling, and a lot of copy-paste (remember kids, good developers copy, great developers paste!) he was able to come up with a site that at least looks passable, and handles the simple function of accepting a letter to Santa and submitting it to the process engine.
 
-For the process engine Santa of course chose [Camunda](https://camunda.com) because of course he did!
+For the process engine Santa of course chose [Camunda](https://camunda.com)!
 
 Once the form was designed, all that was left to do was submit the form using some JavaScript:
 
@@ -56,15 +52,15 @@ Here's what that process looks like:
 
 And here's the flow:
 
-1) A letter comes in, which starts the process
+1) A letter comes in, which starts the process.
 2) The letter is analyzed using some Natural Language Processing (NLP) algorithms to extract some parts of the letter to help figure out what the writer is asking for:
-   1) Identify any items the writer is asking for
+   1) Identify any items the writer is asking for.
    2) Do some Sentiment Analysis to try to figure out how important each item is to the writer.
-3) Once this is done, Go find some possible Amazon links for the things identified
+3) Once this is done, go find some possible Amazon links for the things identified.
 4) Send a letter to the parents with a copy of the original letter, the items they asked for (linked to Amazon of course) and some helpful hints as to what the writer wanted most.
 5) Store the product information in a local database for analysis later.
 
-Now, before anyone tries to have Santa fined for non-compliance with GDPR, he's not storing any names, email addresses, or any other personal data. Santa already knows all about you! He just stores the items asked for. So he can do some demand-gen analysis later. Of course.
+Now, before anyone tries to have Santa fined for non-compliance with GDPR, he's not storing any names, email addresses, or any other personal data. Santa already knows everything about you! He just stores the items asked for. So he can do some demand-gen analysis later, of course.
 
 Santa wrote a pretty basic web-server in `Go` to handle the incoming letters, and submit them to the Camunda BPM processing engine:
 
@@ -120,7 +116,7 @@ func santa(w http.ResponseWriter, r *http.Request) {
 	}
 }
 ```
-He did have to enable CORS to allow the cross-origin posting of data. That's rather a key point in all of this since the server here runs on a different port than the server that handles posting the letters.
+He did have to enable CORS to allow the cross-origin posting of data. That's rather a key point in all of this, since the server here runs on a different port than the server that handles posting the letters.
 
 After that, a bit of magic with the [Camunda Go Client](https://github.com/citilinkru/camunda-client-go) and the letter is submitted to the Camunda BPM Process Engine.
 
@@ -203,7 +199,7 @@ Being Santa, and having an entire _year_ to plan for this, you would have though
 
 The main detail he forgot was to create an Amazon Seller Account, which would have given him access to the product search API. With that, he could have done a much better job of searching for products, looking at the results, etc.
 
-This was not the case, alas. But thankfully one of Santa's smarter elves stepped up at the last possible minute and told him to just use an Amazon search URL. Next year, Santa will be more prepared for this.
+This was not the case, alas. But thankfully one of Santa's smarter elves stepped up at the last minute and told him to just use an Amazon search URL. Next year, Santa will be more prepared for this.
 
 ## Sending the Email
 
@@ -258,7 +254,7 @@ Santa was now done. And he didn't have to lift a finger!
 
 ## How did he do it all?
 
-It did take writing some code, but Santa was able to keep using the Camunda Golang client library to handle everything.
+It did take writing some code, but Santa was able to use the Camunda Golang client library to handle everything.
 
 As we saw, once the letter was submitted, the web server created a new task in Camunda and submitted it, along with all the process variables it needed to keep track of (to start with, just the `name`, `email address` and the `letter` itself). We've already seen how that was done.
 
@@ -321,11 +317,11 @@ proc := processor.NewProcessor(client, &processor.ProcessorOptions{
 		},
 	)
   ```
-  This process creation process is also provided by the [Go Client](https://github.com/citilinkru/camunda-client-go/processor).
+This process creation process is also provided by the [Go Client](https://github.com/citilinkru/camunda-client-go/processor).
 
-  The process is created, using the `client` created previously, and telling the process what tasks to listen for, how long to lock the task (so no one else tries to claim and process it) and then what to **do** once the task is claimed. A Camunda Client `Variable` object is created, and then the `analyze()` function is called.
+The process is created, using the `client` created previously, and telling the process what tasks to listen for, how long to lock the task (so no one else tries to claim and process it) and then what to **do** once the task is claimed. A Camunda Client `Variable` object is created, and then the `analyze()` function is called.
 
-  The analysis function returns the `Variable` which has been filled out with all the parts identified. Those are all stored in a JSON object (represented by a `struct` in Go)
+The analysis function returns the `Variable` which has been filled out with all the parts identified. Those are all stored in a JSON object (represented by a `struct` in Go)
 
   ```go
   type Gift []struct {
@@ -341,11 +337,11 @@ Since we've completed the analysis of the letter, we take all the results, packa
 
 Of course, the next step is to create a similar process to watch for tasks on the `amazon-search` queue. The process is really identical to the previous one, except that it listens for different task identifiers, and calls a different method to execute on the instance variables.
 
-Once the `amazon-search` task is completed (and the `Amazon` portion of the data structure is filled in for each `Gift` idea), the whole thing is returned to the Camunda BPM and the task is marked as completed.
+Once the `amazon-search` task is completed (and the `Amazon` portion of the data structure is filled in for each `Gift` idea), the whole thing is returned to Camunda BPM and the task is marked as completed.
 
 Which moves it on to the `email` portion.
 
-Again, a `processor` is defined to listen for `email` tasks, claim them, and then compose and sent the email to the recipient. Once this is done, the task is marked as completed, and returned.
+Again, a `processor` is defined to listen for `email` tasks, claim them, and then compose and send the email to the recipient. Once this is done, the task is marked as completed, and returned.
 
 Finally, we have a task that stores all the `Gifts` in a database so that Santa can see what sorts of gifts people asked for this year. He may be retired, but still needs to keep a finger on the pulse of what kids want!
 
