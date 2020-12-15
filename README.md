@@ -206,7 +206,7 @@ Here's the form the Elves get when a letter gets routed to them for intervention
 
 ![When the form arrives](imgs/form1.png)
 
-And then after the Elves have given it some thought, checked the Naught/Nice list, they can update the items:
+And then after the Elves have given it some thought, checked the Naughty/Nice list, they can update the items:
 
 ![Updated items form](imgs/form2.png)
 
