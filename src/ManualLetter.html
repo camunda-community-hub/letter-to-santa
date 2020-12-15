@@ -1,0 +1,69 @@
+<form role="form" name="form" id="santa-form">
+
+  <!-- custom control which does not use cam-variable* directives -->
+<h1>Edit any Gifts to make them easier to search for</h1>
+
+
+  <script cam-script type="text/form-script">
+      var variableManager = camForm.variableManager;
+
+
+      camForm.on('form-loaded', function() {
+        // fetch the variable 'gifts'
+        variableManager.fetchVariable('gifts');
+        console.log(variableManager.variableValue('gifts'))
+      });
+
+      camForm.on('variables-fetched', function() {
+        // value has been fetched from the backend
+        var value = variableManager.variableValue('gifts');
+        var frm = document.getElementById('santa-form')
+        var g = 0;// will be the number of gifts.
+        // it's an array of Json so we have to parse it.
+        var m = JSON.parse(variableManager.variables.gifts.originalValue);
+        for(var x = 0; x < m.length;x++){
+          for(var y = 0; y < m[x].gift.length; y++){
+            var textfield = document.createElement("INPUT");
+            textfield.type = "text";
+            // set the ID so we know where the gift goes back in the JSON array
+            textfield.id = "gift-" + x + "-" + y
+            textfield.value = m[x].gift[y];
+            textfield.classList.add("form-control");
+            var label = document.createElement("Label");
+            label.htmlFor = textfield.id;
+            label.innerHTML="Gift idea " + g + " (Rating: " + m[x].sentiment[y] + "): ";
+            frm.appendChild(label);
+            frm.appendChild(textfield);
+            g++
+          }
+        }
+      });
+
+      camForm.on('submit', function(evt) {
+        // get the form
+        var frm = document.getElementById('santa-form')
+        // parse the original JSON
+        var m = JSON.parse(variableManager.variables.gifts.originalValue);
+        // get all the inputs
+        var inputs = document.forms["form"].getElementsByTagName("input");
+        for(var x = 0; x < inputs.length;x++){
+          var e = inputs[x].id.split("-");
+          if(e.length > 0){
+            m[parseInt(e[1])].gift[parseInt(e[2])] = inputs[x].value
+          }
+        }
+        // re-stringify the updated JSON
+        var final = JSON.stringify(m)
+        var backendValue = variableManager.variable('gifts').value;
+        if(final === backendValue) {
+          // prevent submit if value of form field was not changed
+          evt.submitPrevented = true;
+
+        } else {
+          // set value in variable manager so that it can be sent to backend
+          variableManager.variableValue('gifts', final);
+        }
+      });
+    </script>
+
+</form>

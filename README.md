@@ -48,7 +48,7 @@ Handling a letter by just forwarding it to the parents as-is seemed a little too
 
 Here's what that process looks like:
 
-![Letter to Santa Business Process](imgs/letter-to-santa.png)
+![Letter to Santa Business Process](imgs/santa.png)
 
 And here's the flow:
 
@@ -56,9 +56,10 @@ And here's the flow:
 2) The letter is analyzed using some Natural Language Processing (NLP) algorithms to extract some parts of the letter to help figure out what the writer is asking for:
    1) Identify any items the writer is asking for.
    2) Do some Sentiment Analysis to try to figure out how important each item is to the writer.
-3) Once this is done, go find some possible Amazon links for the things identified.
-4) Send a letter to the parents with a copy of the original letter, the items they asked for (linked to Amazon of course) and some helpful hints as to what the writer wanted most.
-5) Store the product information in a local database for analysis later.
+3) If there are no items identified, then the letter is routed to a manual process where one of the Elves can do some more investigation, and update the list.
+4) Once this is done, go find some possible Amazon links for the things identified.
+5) Send a letter to the parents with a copy of the original letter, the items they asked for (linked to Amazon of course) and some helpful hints as to what the writer wanted most.
+6) Store the product information in a local database for analysis later.
 
 Now, before anyone tries to have Santa fined for non-compliance with GDPR, he's not storing any names, email addresses, or any other personal data. Santa already knows everything about you! He just stores the items asked for. So he can do some demand-gen analysis later, of course.
 
@@ -193,6 +194,103 @@ You'll notice that now we have identified some `CONSUMER_GOODS` in the letter, w
 
 So let's see how Santa went about finding links.
 
+## What about if there are no CONSUMER_GOODS?
+
+That's where the magic of manual processes and forms comes in, of course. We have an exclusive gateway that checks to see if any `CONSUMER_GOODS` have been identified. If not, then it would be harder for the Amazon-search process to find anything meaningful.
+
+This part of the process is where the Elves come into play. They didn't all lose their jobs once the whole operation was automated! But they _were_ able to join the "Work From Home" movement, so now they do their jobs from wherever they want! (Look for elves in your neighborhood!)
+
+Let's say Leon had written a letter that just said "I want world peace. And I'd love harmony". While those are lofty ideals, they aren't really things that can be ordered from Amazon (at least not yet).
+
+Here's the form the Elves get when a letter gets routed to them for intervention:
+
+![When the form arrives](imgs/form1.png)
+
+And then after the Elves have given it some thought, checked the Naught/Nice list, they can update the items:
+
+![Updated items form](imgs/form2.png)
+
+The form is then routed back into the process.
+
+There is a bit of work to do in building the form though. First thing is to build the form according to the [docs](https://docs.camunda.org/manual/7.5/reference/embedded-forms/javascript/lifecycle/). Since Santa put everything into a JSON object when the letter was parsed, he had a bit more work to do though.
+
+```javascript
+<form role="form" name="form" id="santa-form">
+<h1>Edit any Gifts to make them easier to search for</h1>
+  <script cam-script type="text/form-script">
+    var variableManager = camForm.variableManager;
+
+    camForm.on('form-loaded', function() {
+      // fetch the variable 'gifts'
+      variableManager.fetchVariable('gifts');
+      console.log(variableManager.variableValue('gifts'))
+    });
+
+    camForm.on('variables-fetched', function() {
+      // value has been fetched from the backend
+      var value = variableManager.variableValue('gifts');
+      var frm = document.getElementById('santa-form')
+      var g = 0;// will be the number of gifts.
+        // it's an array of Json so we have to parse it.
+      var m = JSON.parse(variableManager.variables.gifts.originalValue);
+      for(var x = 0; x < m.length;x++){
+        for(var y = 0; y < m[x].gift.length; y++){
+          var textfield = document.createElement("INPUT");
+          textfield.type = "text";
+          // set the ID so we know where the gift goes back in the JSON array
+          textfield.id = "gift-" + x + "-" + y
+          textfield.value = m[x].gift[y];
+          textfield.classList.add("form-control");
+          var label = document.createElement("Label");
+          label.htmlFor = textfield.id;
+          g++
+        }
+      }
+    });
+
+    camForm.on('submit', function(evt) {
+      // get the form
+      var frm = document.getElementById('santa-form')
+      // parse the original JSON
+      var m = JSON.parse(variableManager.variables.gifts.originalValue);
+      // get all the inputs
+      var inputs = document.forms["form"].getElementsByTagName("input");
+      for(var x = 0; x < inputs.length;x++){
+        var e = inputs[x].id.split("-");
+        if(e.length > 0){
+          m[parseInt(e[1])].gift[parseInt(e[2])] = inputs[x].value
+        }
+      }
+      // re-stringify the updated JSON
+      var final = JSON.stringify(m)
+      var backendValue = variableManager.variable('gifts').value;
+      if(final === backendValue) {
+        // prevent submit if value of form field was not changed
+        evt.submitPrevented = true;
+      } else {
+        // set value in variable manager so that it can be sent to backend
+        variableManager.variableValue('gifts', final);
+      }
+    });
+  </script>
+</form>
+```
+Santa had to create all the form elements on-the-fly, and then read them back into the instance variable at the end.
+
+Now, here's the tricky bit: If you're uploading a form along with your diagram, you can't use the easy interface provided by the Modeler. You have to use a manual process. Santa, being an old-school command-line guy, used `curl`:
+
+```bash
+curl -w “\n” — cookie cookie.txt \
+  -H “Accept: application/json” \
+  -F "deployment-name=santa" \
+  -F "enable-duplicate-filtering=false" \
+  -F "deploy-changed-only=false" \
+  -F "santa.bpmn=@/Users/santa/Downloads/santa.bpmn" \
+  -F "ManualLetter.html=@/Users/santa/github.com/letter-to-santa/src/ManualLetter.html" \
+   http://santa-server.com:8080/engine-rest/deployment/create
+```
+That uploads the BPMN file and the Form to the Camunda BPM Server, and then when the manual process is called, the form shows up!
+
 ## Finding Links
 
 Being Santa, and having an entire _year_ to plan for this, you would have thought Santa could have been better prepared, but, well, the retirement decision was sort of last-minute, and the beach in Thailand was sooo nice, he sort of forgot a few details.
@@ -224,7 +322,7 @@ He took all the information gathered in the previous steps, and pulled it all to
 > > Thank you,
 > > Leon"
 >
-> I've taken the liberty of figuring out which things they want most, and provided you with a list so that you can just purchase these items directly. I know, it's put the elves out of work, but they're a resourceful lot and will undoubtedly figure out something to do with themselves. And no, they are not available for purchase.
+> I've taken the liberty of figuring out which things they want most, and provided you with a list so that you can just purchase these items directly. Don't worry, the Elves are not out of work! They're working from home to monitor all the processes. And no, they are not available for purchase.
 >
 > So, that list:
 
