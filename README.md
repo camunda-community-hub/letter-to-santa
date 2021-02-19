@@ -1,3 +1,5 @@
+<img src="https://img.shields.io/badge/Camunda%20DevRel%20Project-Created%20by%20the%20Camunda%20Developer%20Relations%20team-0Ba7B9">
+
 # Letters to Santa - Automating Joy to the World, At Scale
 
 It’s that time of year again. The time when the world’s largest order fulfillment operation experiences its heaviest load. No, not Amazon - we’re talking about Santa Claus, Inc. - the largest logistics company in the world, with a 24-hour global delivery window at peak load.
